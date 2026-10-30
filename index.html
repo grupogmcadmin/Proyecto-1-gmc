@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#142c48">
+  <meta name="description" content="SIGE - Sistema Integral de Gestión Empresarial">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/sige-192.png">
+  <link rel="apple-touch-icon" href="icons/sige-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>SIGE · Gestión empresarial</title>
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand"><div class="brandmark">S</div><div><strong>SIGE</strong><small>Gestión empresarial integral</small></div></div>
+      <span id="connection" class="pill">Local</span>
+    </header>
+    <main id="main">
+      <section id="setup" class="auth-card hidden">
+        <div class="eyebrow">PRIMER USO</div>
+        <h1>Crear administrador</h1>
+        <p>Define una contraseña para proteger los datos guardados en este teléfono.</p>
+        <form id="setupForm">
+          <label>Nombre del administrador<input id="adminName" required maxlength="70" placeholder="Nombre del administrador"></label>
+          <label>Contraseña<input id="setupPassword" type="password" minlength="10" required autocomplete="new-password" placeholder="Mínimo 10 caracteres"></label>
+          <label>Confirmar contraseña<input id="setupConfirm" type="password" minlength="10" required autocomplete="new-password"></label>
+          <button class="primary" type="submit">Crear acceso SIGE</button>
+        </form>
+        <p class="hint">La contraseña no se guarda en texto legible. Esta primera versión guarda la información localmente en el navegador de este dispositivo.</p>
+      </section>
+
+      <section id="login" class="auth-card hidden">
+        <div class="eyebrow">ACCESO SEGURO</div>
+        <h1>Bienvenido a SIGE</h1>
+        <p>Ingresa la contraseña del administrador.</p>
+        <form id="loginForm">
+          <label>Contraseña<input id="loginPassword" type="password" required autocomplete="current-password"></label>
+          <button class="primary" type="submit">Ingresar</button>
+        </form>
+        <p id="loginError" class="error"></p>
+        <p class="hint">Si olvidas la contraseña, esta versión no tiene recuperación remota. Conserva una copia de seguridad de tus datos.</p>
+      </section>
+
+      <section id="workspace" class="hidden">
+        <div class="welcome">
+          <div><div class="eyebrow">PANEL GENERAL</div><h1>Centro de control</h1><p id="hello">Todas tus empresas en un solo lugar.</p></div>
+          <button id="logoutBtn" class="ghost small">Cerrar sesión</button>
+        </div>
+        <div class="metrics">
+          <article class="metric"><span>Empresas</span><b id="mCompanies">0</b></article>
+          <article class="metric"><span>Clientes</span><b id="mClients">0</b></article>
+          <article class="metric"><span>Personal</span><b id="mWorkers">0</b></article>
+          <article class="metric"><span>Órdenes abiertas</span><b id="mOrders">0</b></article>
+        </div>
+        <nav class="tabs" aria-label="Módulos">
+          <button class="tab active" data-tab="overview">Resumen</button>
+          <button class="tab" data-tab="companies">Empresas</button>
+          <button class="tab" data-tab="clients">Clientes</button>
+          <button class="tab" data-tab="workers">Personal</button>
+          <button class="tab" data-tab="orders">Órdenes</button>
+          <button class="tab" data-tab="backup">Respaldo</button>
+        </nav>
+        <section id="tab-overview" class="panel">
+          <div class="section-head"><div><h2>Actividad reciente</h2><p>Resumen de registros guardados en este teléfono.</p></div></div>
+          <div id="recentOrders" class="stack"></div>
+          <div class="notice"><strong>Base local activa.</strong> Los datos permanecen en este navegador/dispositivo. La sincronización en la nube se añadirá en una etapa posterior.</div>
+        </section>
+        <section id="tab-companies" class="panel hidden">
+          <div class="section-head"><div><h2>Empresas</h2><p>Registra empresas de distintos rubros.</p></div></div>
+          <form id="companyForm" class="form-grid">
+            <label>Nombre de empresa<input id="companyName" required maxlength="100"></label>
+            <label>Rubro<input id="companyIndustry" required maxlength="80" placeholder="Ej. Construcción, servicios"></label>
+            <label class="full">RUT (opcional)<input id="companyRut" maxlength="20" placeholder="RUT de la empresa"></label>
+            <button class="primary full" type="submit">Agregar empresa</button>
+          </form>
+          <div id="companyList" class="stack"></div>
+        </section>
+        <section id="tab-clients" class="panel hidden">
+          <div class="section-head"><div><h2>Clientes</h2><p>Registro de clientes y empresa relacionada.</p></div></div>
+          <form id="clientForm" class="form-grid">
+            <label>Nombre / razón social<input id="clientName" required maxlength="100"></label>
+            <label>RUT<input id="clientRut" maxlength="20"></label>
+            <label>Teléfono<input id="clientPhone" maxlength="30" inputmode="tel"></label>
+            <label>Correo<input id="clientEmail" type="email" maxlength="120"></label>
+            <label class="full">Empresa relacionada<select id="clientCompany"></select></label>
+            <button class="primary full" type="submit">Agregar cliente</button>
+          </form>
+          <div id="clientList" class="stack"></div>
+        </section>
+        <section id="tab-workers" class="panel hidden">
+          <div class="section-head"><div><h2>Personal</h2><p>Registro básico de trabajadores y supervisores.</p></div></div>
+          <form id="workerForm" class="form-grid">
+            <label>Nombre completo<input id="workerName" required maxlength="100"></label>
+            <label>Rol<select id="workerRole"><option>Trabajador</option><option>Supervisor</option></select></label>
+            <label>Área / departamento<input id="workerArea" required maxlength="80" placeholder="Ej. Operaciones"></label>
+            <label>Empresa<select id="workerCompany"></select></label>
+            <button class="primary full" type="submit">Agregar integrante</button>
+          </form>
+          <div id="workerList" class="stack"></div>
+        </section>
+        <section id="tab-orders" class="panel hidden">
+          <div class="section-head"><div><h2>Órdenes de trabajo</h2><p>Planifica, asigna y registra el avance.</p></div></div>
+          <form id="orderForm" class="form-grid">
+            <label class="full">Descripción<input id="orderTitle" required maxlength="140" placeholder="Ej. Mantención de instalaciones"></label>
+            <label>Empresa<select id="orderCompany"></select></label>
+            <label>Área<input id="orderArea" required maxlength="80" placeholder="Operaciones"></label>
+            <label>Responsable<input id="orderResponsible" required maxlength="100"></label>
+            <label>Fecha programada<input id="orderDate" type="date" required></label>
+            <label>Hora<input id="orderTime" type="time" value="09:00" required></label>
+            <label>Prioridad<select id="orderPriority"><option>Normal</option><option>Alta</option><option>Urgente</option></select></label>
+            <button class="primary full" type="submit">Crear orden de trabajo</button>
+          </form>
+          <div id="orderList" class="stack"></div>
+        </section>
+        <section id="tab-backup" class="panel hidden">
+          <div class="section-head"><div><h2>Respaldo de datos</h2><p>Exporta una copia JSON para guardarla en un lugar seguro.</p></div></div>
+          <div class="notice warning"><strong>Importante:</strong> borrar los datos del navegador, desinstalar el navegador o cambiar de teléfono puede hacer que pierdas los datos locales. Exporta respaldos con frecuencia.</div>
+          <button id="exportBtn" class="primary">Descargar copia de seguridad</button>
+          <label class="file-label">Restaurar copia JSON<input id="importFile" type="file" accept="application/json,.json"></label>
+          <p class="hint">La restauración reemplaza los registros actuales de SIGE en este dispositivo.</p>
+        </section>
+      </section>
+    </main>
+    <footer> SIGE · Primera versión local · Datos de este dispositivo </footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
